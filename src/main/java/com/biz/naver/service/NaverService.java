@@ -11,6 +11,10 @@ import java.net.URLEncoder;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 
 import com.biz.naver.config.NaverClient;
@@ -23,8 +27,60 @@ public class NaverService {
 
 	private Log log = LogFactory.getLog(this.getClass());
 	
+	/*
+	 * JSON형태의 문자열을 매개변수로 받아서 JSON OBJECT로 
+	 * parsing한 후 List<VO>같은 Java Object형으로 변환하여
+	 * controller로 return 하도록 작성
+	 */
+	public JSONArray getBookObject(String jsonString) {
+		
+		/*
+		 * jsonString을 JSON OBJECT 로 변환 작업 실행
+		 */
+		
+		//1. JSONParser 객체 생성
+		JSONParser jp = new JSONParser();
+		
+		//2. JSONParser 객체를 경우해서 문자열을 JSONOBJECT로 일단 변환
+		JSONObject jo = null;
+		
+		try {
+			jo = (JSONObject) jp.parse(jsonString);
+			
+			long longTotal = (Long) jo.get("total");
+			
+			String lastDate = (String)jo.get("lastBuildDate");
+			
+//			JSONObject lastDate = (JSONObject) jo.get("lastBuildDate");
+			
+			log.debug("요청한 시각 : " + lastDate.toString());
+			log.debug("수신한 데이터 갯수 : " + longTotal);
+			
+			/*
+			 * 문자열 중에서 도서정보가 포함된 영역만 추출
+			 *  도서정보가 포함된 영역의 key items
+			 */
+			
+			//items 항목 부분만 추출해서 JSONArray로 변환
+			JSONArray items = (JSONArray) jo.get("items");	
+			int itemsLen = items.size();
+			
+			for(int i = 0; i < itemsLen ; i ++) {
+				log.debug(i + "번째 데이터" + items.get(i));
+			}
+			
+			return items;
+			
+			
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	//도서정보 검색
-	public String getBookInfo(String searchText) {
+	public String getBookString(String searchText) {
 		
 		log.debug("반갑소");
 		

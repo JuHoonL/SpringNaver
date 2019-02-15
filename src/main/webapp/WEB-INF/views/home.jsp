@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,6 +8,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>네이버는 내친구</title>
 <style>
+	header {
+		background-color: #ccc;
+		text-align: center;
+	}
+	
 	body {
 		display: flex;
 		flex-flow: column wrap;
@@ -52,6 +58,12 @@
 	#search {
 		margin: 10px;
 	}
+	
+	.book-item {
+		border: 1px solid #ccc;
+		margin: 5px;
+		padding: 5px;
+	}
 </style>
 </head>
 <body>
@@ -65,6 +77,12 @@
 		</form>
 	</nav>
 	<section id="main-container">
+	<c:forEach items="${NAVER}" var="book">
+		<article class="book-item">
+			<p>${book.title}</p>
+			<p>${book.description}</p>
+		</article>
+	</c:forEach>
 	</section>
 	<footer>
 		<address>CopyRight &copy; juhoon12@nate.com</address>
