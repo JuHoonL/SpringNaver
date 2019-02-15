@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- logback이 사용할 정보를 설정 -->
+
+<configuration>
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<charset>UTF-8</charset>
+		
+			<Pattern>
+				%d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n
+			</Pattern>
+		</encoder>
+	</appender>
+	
+	<!-- 
+		level 등급
+			error
+			warn
+			info
+			debug
+			trace
+	 -->
+	<logger name="com.biz.naver" level="debug" additivity="false">
+		<appender-ref ref="console" />
+	</logger>
+	
+	<root level="warn">
+		<appender-ref ref="console" />
+	</root>
+</configuration>

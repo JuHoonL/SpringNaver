@@ -9,27 +9,36 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
 import com.biz.naver.config.NaverClient;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class NaverService {
 
+	private Log log = LogFactory.getLog(this.getClass());
+	
 	//도서정보 검색
-	public void getBookInfo() {
+	public String getBookInfo(String searchText) {
+		
+		log.debug("반갑소");
 		
 		//id와 key 세팅
 		String clientId = NaverClient.ID;
 		String clientKey = NaverClient.KEY;
 		
 		//검색문자열을 하나 선언
-		String text = "자바";
+//		String text = "자바";
 		
 		
 		try {
 			//검색문자열을 NAVER로 보내기전에 ENCODING을 실시
-			text = URLEncoder.encode(text,"UTF-8");
+			String text = URLEncoder.encode(searchText,"UTF-8");
 			String apiURL = "https://openapi.naver.com/v1/search/book.json";
 			apiURL += "?query=" + text;
 			
@@ -59,13 +68,17 @@ public class NaverService {
 			}
 			
 			String reader = "";
+			String readStrings = "";
 			while(true) {
 				reader = br.readLine();
 				if(reader == null) break;
-				System.out.println(reader);
+				log.debug(reader);
+				
+				readStrings += reader;
 			}
 			
 			br.close();
+			return readStrings ; //Controller로 리턴
 			
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
@@ -77,5 +90,6 @@ public class NaverService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return null;
 	}
 }
